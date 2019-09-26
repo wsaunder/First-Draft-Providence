@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Providense</title>
+  <script type="text/javascript" src="js/HexagonTools.js"></script>
+  <script type="text/javascript" src="js/Grid.js"></script>
+  <script type="text/javascript" src="js/HexCalcs.js"></script>
+  <script type="text/javascript"></script>
+  <style>
+    canvas {
+      border: 1px solid black;
+      width: 70%;
+    }
+  </style>
+</head>
+<body>
+
+ <!-- <h3>Hex Based on Width and Height</h3>
+  Width:<br />
+  <input type="text" id="hexWidth" value="100.0" /><br />
+  Height:<br />
+  <input type="text" id="hexHeight" value="86.60254037844388" /><br />
+  <input type="button" onclick="getHexGridWH()" value="Draw Hex Grid by Width and Height"/>
+  
+  <div id="hexStatus"></div>
+-->
+  <canvas id="hexCanvas" width="800" height="600" style="width:800px;height:600px" />
+  <script>
+    window.addEventListener("load", function() {
+      var canvas = document.getElementById("hexCanvas");
+      //getHexGridWH();
+      
+      function getCursorPosition(canvas, event) {
+        const rect = canvas.getBoundingClientRect()
+        const x = event.clientX - rect.left
+        const y = event.clientY - rect.top
+      }
+      
+      //draw hex at click
+      canvas.addEventListener("mouseup", function(e){
+        getCursorPosition(canvas, e)
+        addHex("G5", e.x-55, e.y-50);
+      });
+      
+      addHex = function(name, x, y) {
+      var hex = new HT.Hexagon(name, x, y);
+      hex.draw(canvas.getContext("2d"));     
+    }
+      
+  })
+  </script>
+</body>
+</html>
