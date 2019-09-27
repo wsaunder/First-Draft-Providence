@@ -24,11 +24,25 @@
   
   <div id="hexStatus"></div>
 -->
+  <div>
+  <button onclick="setColor('red')">Red</button>
+  <button onclick="setColor('blue')">Blue</button>
+  <button onclick="setColor('green')">Green</button>
+  <button onclick="setColor('yellow')">Yellow</button>
+  </div>
   <canvas id="hexCanvas" width="800" height="600" style="width:800px;height:600px" />
+  
   <script>
+    var color = "white";
+    function setColor(choice){
+      color = choice.toString();
+    }
     window.addEventListener("load", function() {
       var canvas = document.getElementById("hexCanvas");
-      //getHexGridWH();
+      getHexGridWH();
+      
+      var grid = new HT.Grid(800, 600);
+      //console.log(grid.Hexes);
       
       function getCursorPosition(canvas, event) {
         const rect = canvas.getBoundingClientRect()
@@ -37,16 +51,38 @@
       }
       
       //draw hex at click
-      canvas.addEventListener("mouseup", function(e){
-        getCursorPosition(canvas, e)
-        addHex("G5", e.x-55, e.y-50);
+     // canvas.addEventListener("mouseup", function(e){
+     //   getCursorPosition(canvas, e)
+     //   addHex("G5", e.x-55, e.y-50);
+     // });
+      canvas.addEventListener("mouseup", function(e) {
+        getCursorPosition(canvas, e);
+        var p = new HT.Point(e.x-24, e.y-24);
+        //var p = new HT.Point(e.x-55, e.y-50);
+        console.log(grid.GetHexAt(p))
+        //if (Hexes.forEach(firstClick()) = )
+        addHex(grid.GetHexAt(p).Id, grid.GetHexAt(p).TopLeftPoint.X, grid.GetHexAt(p).TopLeftPoint.Y);
+        if (color != "white") {
+          grid.GetHexAt(p).selected = true;
+        };
+        
       });
+      
       
       addHex = function(name, x, y) {
       var hex = new HT.Hexagon(name, x, y);
-      hex.draw(canvas.getContext("2d"));     
-    }
+      hex.draw(canvas.getContext("2d"), color);
+      }
+      //function firstClick(selected){
+      //  if selected = true {
+      //    return true;
+      //  } else {
+      //    return false;
+      //  }
+      //};
       
+    
+     
   })
   </script>
 </body>

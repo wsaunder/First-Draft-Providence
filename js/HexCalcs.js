@@ -63,7 +63,7 @@ function drawHexGrid()
 	ctx.clearRect(0, 0, 800, 600);
 	for(var h in grid.Hexes)
 	{
-		grid.Hexes[h].draw(ctx);
+		grid.Hexes[h].draw(ctx, "white");
 	}
 }
 

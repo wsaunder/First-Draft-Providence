@@ -79,9 +79,8 @@ HT.Hexagon = function(id, x, y) {
  * draws this Hexagon to the canvas
  * @this {HT.Hexagon}
  */
-HT.Hexagon.prototype.draw = function(ctx) {
-    
-	if(!this.selected)
+HT.Hexagon.prototype.draw = function(ctx, color) {
+    if(!this.selected)
 		ctx.strokeStyle = "grey";
 	else
 		ctx.strokeStyle = "black";
@@ -95,7 +94,7 @@ HT.Hexagon.prototype.draw = function(ctx) {
 	}
 	ctx.closePath();
 	ctx.stroke();
-    ctx.fillStyle = "red";
+    ctx.fillStyle = color;
     ctx.fill();
 	
 	if(this.Id)
