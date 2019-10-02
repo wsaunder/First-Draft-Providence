@@ -71,6 +71,16 @@ HT.Grid = function(/*double*/ width, /*double*/ height) {
 				h.PathCoOrdX = coOrd2++;
 		}
 	}
+    //create neighbors
+    for (i = 0; i < this.Hexes.length; i ++) {
+      var h1 = this.Hexes[i];
+      for (var h2 in this.Hexes){
+        var dist = this.GetHexDistance(h1,this.Hexes[h2]);
+        if (dist == 1) {
+          h1.neighbors.push(this.Hexes[h2].Id);
+        }
+      }
+    }
 };
 
 HT.Grid.Static = {Letters:'ABCDEFGHIJKLMNOPQRSTUVWXYZ'};
@@ -159,4 +169,13 @@ HT.Grid.prototype.GetNearestHex = function(/*Point*/ p) {
 	}
 
 	return hx;
+};
+
+HT.Grid.prototype.CheckNeighbors = function(p) {
+  var h = this.GetNearestHex(p);
+  for (var n in h.neighbors) {
+    if (this.GetHexById(h.neighbors[n]).selected == true) {
+      return true;
+      }
+    }
 };

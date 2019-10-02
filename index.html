@@ -5,12 +5,14 @@
   <script type="text/javascript" src="js/HexagonTools.js"></script>
   <script type="text/javascript" src="js/Grid.js"></script>
   <script type="text/javascript" src="js/HexCalcs.js"></script>
-  <script type="text/javascript"></script>
+  <script type="text/javascript" src="node_modules/jquery/dist/jquery.js"></script> 
+  <script type="text/javascript" src="js/notify.min.js"></script>
   <style>
     canvas {
       border: 1px solid black;
       width: 70%;
     }
+    
   </style>
 </head>
 <body>
@@ -34,6 +36,7 @@
   
   <script>
     var color = "white";
+    var any_selected = false;
     function setColor(choice){
       color = choice.toString();
     }
@@ -59,19 +62,43 @@
         getCursorPosition(canvas, e);
         var p = new HT.Point(e.x-24, e.y-24);
         //var p = new HT.Point(e.x-55, e.y-50);
-        console.log(grid.GetHexAt(p))
+        //console.log(grid.GetHexAt(p))
         //if (Hexes.forEach(firstClick()) = )
-        addHex(grid.GetHexAt(p).Id, grid.GetHexAt(p).TopLeftPoint.X, grid.GetHexAt(p).TopLeftPoint.Y);
-        if (color != "white") {
-          grid.GetHexAt(p).selected = true;
-        };
+        //addHex(grid.GetHexAt(p).Id, grid.GetHexAt(p).TopLeftPoint.X, grid.GetHexAt(p).TopLeftPoint.Y);
+        //if (color != "white") {
+        //  grid.GetHexAt(p).selected = true;
+        //};
+        anySelected(p);
+        grid.CheckNeighbors(p);
+        
+        
         
       });
+      // checks if any hexes have been clicked yet
+      anySelected = function(p) {
+        if (any_selected == true) {
+          if (grid.CheckNeighbors(p) == true) {
+            addHex(grid.GetHexAt(p).Id, grid.GetHexAt(p).TopLeftPoint.X, grid.GetHexAt(p).TopLeftPoint.Y);
+            grid.GetHexAt(p).selected = true;
+          }
+          return true;
+        }  else if (color != "white") {
+          any_selected = true;
+          addHex(grid.GetHexAt(p).Id, grid.GetHexAt(p).TopLeftPoint.X, grid.GetHexAt(p).TopLeftPoint.Y);
+          grid.GetHexAt(p).selected = true;
+        } else {
+          $(document).ready(function(){
+            $.notify("Please select a color" , { position:"top center"  } );
+          })
+        }
+      }
+      
+      
       
       
       addHex = function(name, x, y) {
-      var hex = new HT.Hexagon(name, x, y);
-      hex.draw(canvas.getContext("2d"), color);
+        var hex = new HT.Hexagon(name, x, y);
+        hex.draw(canvas.getContext("2d"), color);
       }
       //function firstClick(selected){
       //  if selected = true {

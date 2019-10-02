@@ -73,6 +73,7 @@ HT.Hexagon = function(id, x, y) {
 	this.P1 = new HT.Point(x + x1, y + y1);
 	
 	this.selected = false;
+    this.neighbors = [];
 };
 	
 /**
