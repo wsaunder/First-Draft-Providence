@@ -5,12 +5,20 @@
   <script type="text/javascript" src="js/HexagonTools.js"></script>
   <script type="text/javascript" src="js/Grid.js"></script>
   <script type="text/javascript" src="js/HexCalcs.js"></script>
+  <script type="text/javascript" src="js/logic.js"></script>
+  <script type="text/javascript" src="js/main.js"></script>
   <script type="text/javascript" src="node_modules/jquery/dist/jquery.js"></script> 
   <script type="text/javascript" src="js/notify.min.js"></script>
   <style>
     canvas {
       border: 1px solid black;
       width: 70%;
+    }
+    span {
+      padding: 20px;
+    }
+    button{
+      margin:10px;
     }
     
   </style>
@@ -27,90 +35,43 @@
   <div id="hexStatus"></div>
 -->
   <div>
-  <button onclick="setColor('red')">Red</button>
-  <button onclick="setColor('blue')">Blue</button>
-  <button onclick="setColor('green')">Green</button>
-  <button onclick="setColor('yellow')">Yellow</button>
+    <div><h3>Phase</h3><div id='phase'>Genesis</div></div>
+  <div><button onclick="setLand('Mountain')" class="actionButton">Mountain</button>
+    <button onclick="setLand('Pasture')" class="actionButton">Pasture</button>
+    <button onclick="setLand('Forest')" class="actionButton">Forest</button>
+    <button onclick="setLand('Desert')" class="actionButton">Desert</button>
+    <button onclick="setLand('Hills')" class="actionButton">Hills</button>
+    <button onclick="setLand('Plains')" class="actionButton">Plains</button>
   </div>
-  <canvas id="hexCanvas" width="800" height="600" style="width:800px;height:600px" />
+  <br>
+  <div>Land Selected:</div><span id="landSelection"></span>  
+  <div>
+    <button onclick="addMeeple(1)" class="actionButton">Add Follower</button>
+    <button onclick="addTemple(1)" class="actionButton">Add Temple</button>
+    <button onclick="nextTurn()" >Next Turn</button>
+    <button onclick="nextPlayer()" >Next Player</button>
+  </div>
+  </div>
+  <br>
+  <div><canvas id="hexCanvas" width="800" height="600" style="width:800px;height:600px" /> </div>
+  <div><h2>Player<span id='player#'>1</span></h2></div>
+  <div><h2>Resources</h2>
+    <div>
+      <span> Food <span id="food"></span></span>
+      <span> Stone <span id="stone"></span></span>
+      <span> Metal <span id="metal"></span></span>
+      <span> Mana <span id="mana"></span></span>
+    </div>
+  </div>
   
   <script>
-    var color = "white";
-    var any_selected = false;
-    function setColor(choice){
-      color = choice.toString();
-    }
-    window.addEventListener("load", function() {
-      var canvas = document.getElementById("hexCanvas");
-      getHexGridWH();
-      
-      var grid = new HT.Grid(800, 600);
-      //console.log(grid.Hexes);
-      
-      function getCursorPosition(canvas, event) {
-        const rect = canvas.getBoundingClientRect()
-        const x = event.clientX - rect.left
-        const y = event.clientY - rect.top
-      }
-      
-      //draw hex at click
-     // canvas.addEventListener("mouseup", function(e){
-     //   getCursorPosition(canvas, e)
-     //   addHex("G5", e.x-55, e.y-50);
-     // });
-      canvas.addEventListener("mouseup", function(e) {
-        getCursorPosition(canvas, e);
-        var p = new HT.Point(e.x-24, e.y-24);
-        //var p = new HT.Point(e.x-55, e.y-50);
-        //console.log(grid.GetHexAt(p))
-        //if (Hexes.forEach(firstClick()) = )
-        //addHex(grid.GetHexAt(p).Id, grid.GetHexAt(p).TopLeftPoint.X, grid.GetHexAt(p).TopLeftPoint.Y);
-        //if (color != "white") {
-        //  grid.GetHexAt(p).selected = true;
-        //};
-        anySelected(p);
-        grid.CheckNeighbors(p);
-        
-        
-        
-      });
-      // checks if any hexes have been clicked yet
-      anySelected = function(p) {
-        if (any_selected == true) {
-          if (grid.CheckNeighbors(p) == true) {
-            addHex(grid.GetHexAt(p).Id, grid.GetHexAt(p).TopLeftPoint.X, grid.GetHexAt(p).TopLeftPoint.Y);
-            grid.GetHexAt(p).selected = true;
-          }
-          return true;
-        }  else if (color != "white") {
-          any_selected = true;
-          addHex(grid.GetHexAt(p).Id, grid.GetHexAt(p).TopLeftPoint.X, grid.GetHexAt(p).TopLeftPoint.Y);
-          grid.GetHexAt(p).selected = true;
-        } else {
-          $(document).ready(function(){
-            $.notify("Please select a color" , { position:"top center"  } );
-          })
-        }
-      }
-      
-      
-      
-      
-      addHex = function(name, x, y) {
-        var hex = new HT.Hexagon(name, x, y);
-        hex.draw(canvas.getContext("2d"), color);
-      }
-      //function firstClick(selected){
-      //  if selected = true {
-      //    return true;
-      //  } else {
-      //    return false;
-      //  }
-      //};
-      
+
     
-     
-  })
+
+    
+
+    
+
   </script>
 </body>
 </html>

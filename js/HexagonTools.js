@@ -74,6 +74,13 @@ HT.Hexagon = function(id, x, y) {
 	
 	this.selected = false;
     this.neighbors = [];
+    this.meeples = 0;
+    this.temples = 0;
+    this.land = null;
+    //this.food = 1;
+    //this.stone = 1;
+    //this.metal = 1;
+    this.player = 0;
 };
 	
 /**
@@ -97,28 +104,69 @@ HT.Hexagon.prototype.draw = function(ctx, color) {
 	ctx.stroke();
     ctx.fillStyle = color;
     ctx.fill();
+    
+    if(color != "white") {
+      ctx.fillStyle = "black"
+      ctx.font = "bolder 6pt Trebuchet MS,Tahoma,Verdana,Arial,sans-serif";
+      ctx.textAlign = "center";
+      ctx.textBaseline = 'middle';
+      if (color == "FireBrick") {
+        ctx.fillText("Mountain", this.MidPoint.X, this.MidPoint.Y-30);
+      } else if (color == "LawnGreen") {
+        ctx.fillText("Pasture", this.MidPoint.X, this.MidPoint.Y-30);
+      } else if (color == "ForestGreen") {
+        ctx.fillText("Forest", this.MidPoint.X, this.MidPoint.Y-30);
+      } else if (color == "Peru") {
+        ctx.fillText("Desert", this.MidPoint.X, this.MidPoint.Y-30);
+      } else if (color == "DarkGoldenRod") {
+        ctx.fillText("Hills", this.MidPoint.X, this.MidPoint.Y-30);
+      } else if (color == "Wheat") {
+        ctx.fillText("Plains", this.MidPoint.X, this.MidPoint.Y-30);
+      }
+      ctx.fillText("Followers " + this.meeples, this.MidPoint.X, this.MidPoint.Y+30);
+      ctx.fillText("Temples " + this.temples, this.MidPoint.X, this.MidPoint.Y-15);
+      ctx.fillText("Player " + this.player, this.MidPoint.X, this.MidPoint.Y);
+    }
 	
-	if(this.Id)
-	{
-		//draw text for debugging
-		ctx.fillStyle = "black"
-		ctx.font = "bolder 8pt Trebuchet MS,Tahoma,Verdana,Arial,sans-serif";
-		ctx.textAlign = "center";
-		ctx.textBaseline = 'middle';
-		//var textWidth = ctx.measureText(this.Planet.BoundingHex.Id);
-		ctx.fillText(this.Id, this.MidPoint.X, this.MidPoint.Y);
-	}
+	//if(this.Id)
+	//{
+	//	//draw text for debugging
+	//	ctx.fillStyle = "black"
+	//	ctx.font = "bolder 8pt Trebuchet MS,Tahoma,Verdana,Arial,sans-serif";
+	//	ctx.textAlign = "center";
+	//	ctx.textBaseline = 'middle';
+	//	//var textWidth = ctx.measureText(this.Planet.BoundingHex.Id);
+	//	ctx.fillText(this.Id, this.MidPoint.X, this.MidPoint.Y);
+	//}
+//    if(this.meeples)
+//      {
+//        ctx.fillStyle = "black"
+//        ctx.font = "bolder 6pt Trebuchet MS,Tahoma,Verdana,Arial,sans-serif";
+//        ctx.textAlign = "center";
+//        ctx.textBaseline = 'middle';
+//        //var textWidth = ctx.measureText(this.Planet.BoundingHex.Id);
+//        ctx.fillText("Followers " + this.meeples, this.MidPoint.X, this.MidPoint.Y+30);
+//      }
+//    if(this.temples)
+//      {
+//        ctx.fillStyle = "black"
+//        ctx.font = "bolder 6pt Trebuchet MS,Tahoma,Verdana,Arial,sans-serif";
+//        ctx.textAlign = "center";
+//        ctx.textBaseline = 'middle';
+//        //var textWidth = ctx.measureText(this.Planet.BoundingHex.Id);
+//        ctx.fillText("Temples " + this.temples, this.MidPoint.X, this.MidPoint.Y-15);
+//      }
 	
-	if(this.PathCoOrdX !== null && this.PathCoOrdY !== null && typeof(this.PathCoOrdX) != "undefined" && typeof(this.PathCoOrdY) != "undefined")
-	{
-		//draw co-ordinates for debugging
-		ctx.fillStyle = "black"
-		ctx.font = "bolder 8pt Trebuchet MS,Tahoma,Verdana,Arial,sans-serif";
-		ctx.textAlign = "center";
-		ctx.textBaseline = 'middle';
-		//var textWidth = ctx.measureText(this.Planet.BoundingHex.Id);
-		ctx.fillText("("+this.PathCoOrdX+","+this.PathCoOrdY+")", this.MidPoint.X, this.MidPoint.Y + 10);
-	}
+//	if(this.PathCoOrdX !== null && this.PathCoOrdY !== null && typeof(this.PathCoOrdX) != "undefined" && typeof(this.PathCoOrdY) != "undefined")
+//	{
+//		//draw co-ordinates for debugging
+//		ctx.fillStyle = "black"
+//		ctx.font = "bolder 8pt Trebuchet MS,Tahoma,Verdana,Arial,sans-serif";
+//		ctx.textAlign = "center";
+//		ctx.textBaseline = 'middle';
+//		//var textWidth = ctx.measureText(this.Planet.BoundingHex.Id);
+//		ctx.fillText("("+this.PathCoOrdX+","+this.PathCoOrdY+")", this.MidPoint.X, this.MidPoint.Y + 10);
+//	}
 	
 	if(HT.Hexagon.Static.DRAWSTATS)
 	{
