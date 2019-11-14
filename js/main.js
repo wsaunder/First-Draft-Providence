@@ -52,6 +52,7 @@
     }
     
 
+
     var landColor = {Mountain: "FireBrick", Pasture: "LawnGreen", Forest: "ForestGreen", Desert: "Peru", Hills: "DarkGoldenrod", Plains: "Wheat"};
     var color = "white";
     var any_selected = false;
@@ -60,8 +61,9 @@
     var land = null;
     var turn = 0;
     var action = true;
-    var player = 1;
-    var players = 2;
+    var currentPlayer = 1;
+    var totalPlayers = 2;
+    var players = [];
 
     
     function setColor(choice){
@@ -82,7 +84,9 @@
         land = forest;
       } else {
         land = null;}
-      setColor(landColor[choice]);
+      if (choice != null) {
+        setColor(landColor[choice]);
+      }
       document.getElementById('landSelection').innerHTML = choice;
     }
     
@@ -101,7 +105,9 @@
       var grid = new HT.Grid(800, 600);
       var player1 = new Player(1);
       var player2 = new Player(2);
-      console.log(player2);
+      players.push(player1);
+      players.push(player2);
+      
       
       function getCursorPosition(canvas, evt) {
         const rect = canvas.getBoundingClientRect();
@@ -117,6 +123,7 @@
         var p = new HT.Point(point.x, point.y);
         //var p = new HT.Point(e.x-55, e.y-50);
         console.log(grid.GetHexAt(p))
+        
         //if (Hexes.forEach(firstClick()) = )
         //addHex(grid.GetHexAt(p).Id, grid.GetHexAt(p).TopLeftPoint.X, grid.GetHexAt(p).TopLeftPoint.Y);
         //if (color != "white") {
@@ -126,6 +133,7 @@
         //grid.CheckNeighbors(p);
         console.log(action);
         anySelected(p);
+        
 
         
         
@@ -137,22 +145,24 @@
         if (action == true) {
         if (any_selected == true) {
           if (grid.CheckNeighbors(p) == true) {
-            grid.GetHexAt(p).player = player;
-            grid.GetHexAt(p).meeples += meeple;
-            grid.GetHexAt(p).temples += temple;           
-            meeple = 0;
-            temple = 0;
-            //addHex(grid.GetHexAt(p).Id, grid.GetHexAt(p).TopLeftPoint.X, grid.GetHexAt(p).TopLeftPoint.Y);
-            grid.GetHexAt(p).draw(canvas.getContext("2d"), color);
-            grid.GetHexAt(p).selected = true;
-            grid.GetHexAt(p).land = land;
-            action = false;
-            disable();
+            if (color != "white") {
+              grid.GetHexAt(p).player = currentPlayer;
+              grid.GetHexAt(p).meeples += meeple;
+              grid.GetHexAt(p).temples += temple;           
+              meeple = 0;
+              temple = 0;
+              //addHex(grid.GetHexAt(p).Id, grid.GetHexAt(p).TopLeftPoint.X, grid.GetHexAt(p).TopLeftPoint.Y);
+              grid.GetHexAt(p).draw(canvas.getContext("2d"), color);
+              grid.GetHexAt(p).selected = true;
+              grid.GetHexAt(p).land = land;
+              action = false;
+              disable();
+            }
           }
         }  else if (color != "white") {
           any_selected = true;
           //addHex(grid.GetHexAt(p).Id, grid.GetHexAt(p).TopLeftPoint.X, grid.GetHexAt(p).TopLeftPoint.Y);
-          grid.GetHexAt(p).player = player;
+          grid.GetHexAt(p).player = currentPlayer;
           grid.GetHexAt(p).land = land;
           grid.GetHexAt(p).draw(canvas.getContext("2d"), color);
           grid.GetHexAt(p).selected = true;
@@ -189,11 +199,13 @@
           turn = 1;
         }
         document.getElementById('phase').innerHTML = phases[turn-1];
-        action = true;
-        if (phase = 'Numbers') {
-          Numbers();
+        if (action == false) {
+          disable();
         }
-        
+        action = true;
+        if (turn == 1) {
+          Numbers();
+        }       
       }
       
       nextPlayer = function(){
@@ -201,11 +213,13 @@
           action = true;
           disable();
         }
-        player += 1;
-        if (player == 3) {
-          player = 1;
+        currentPlayer += 1;
+        if (currentPlayer > totalPlayers) {
+          currentPlayer = 1;
         }
-        document.getElementById('player#').innerHTML = player;
+        color = "white";
+        setLand(null);
+        document.getElementById('player#').innerHTML = currentPlayer;
       }
       disable = function() {
         $(document).ready(function(){
@@ -222,22 +236,31 @@
       }
       
       updateResources = function(){
-        var food = 0;
-        var stone = 0;
-        var metal =0;
-        var mana = 0;
-        for (var n in grid.Hexes) {
-          if (grid.Hexes[n].land) {
-            food += grid.Hexes[n].land.food;
-            console.log(grid.Hexes[n].land.food);
-            stone += grid.Hexes[n].land.stone;
-            metal += grid.Hexes[n].land.metal;
-            mana += grid.Hexes[n].land.mana;
+          for (var n in grid.Hexes) {
+            if (grid.Hexes[n].land) {
+              for (var p in players) {
+                players[p].tiles = 0;
+                if (grid.Hexes[n].player == players[p].playerNumber) {
+                  //players[p].tiles = 0;
+                  //players[p].tiles += 1;
+                  players[p].food += grid.Hexes[n].land.food;
+                  players[p].stone += grid.Hexes[n].land.stone;
+                  players[p].metal += grid.Hexes[n].land.metal;
+                  players[p].mana += grid.Hexes[n].land.mana;
+                }
+              }
+            }
           }
-        }
-        document.getElementById("food").innerHTML = food;
-        document.getElementById("stone").innerHTML = stone;
-        document.getElementById("metal").innerHTML = metal;
-        document.getElementById("mana").innerHTML = mana;
+        
+        document.getElementById("food1").innerHTML = player1.food;
+        document.getElementById("stone1").innerHTML = player1.stone;
+        document.getElementById("metal1").innerHTML = player1.metal;
+        document.getElementById("mana1").innerHTML = player1.mana;
+        document.getElementById("tile1").innerHTML = player1.tiles;
+        document.getElementById("food2").innerHTML = player2.food;
+        document.getElementById("stone2").innerHTML = player2.stone;
+        document.getElementById("metal2").innerHTML = player2.metal;
+        document.getElementById("mana2").innerHTML = player2.mana;
+        document.getElementById("tile2").innerHTML = player1.tiles;
        }
   })
